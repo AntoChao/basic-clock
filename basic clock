@@ -1,0 +1,80 @@
+import time
+import threading
+import datetime
+
+running = True
+consoleBuffer = []
+
+
+def consoleInput(myBuffer):
+    while True:
+        myBuffer.append(input())
+
+
+def timer():
+    Hour = int(input("Hour: "))
+    Minute = int(input("Minute: "))
+    Second = int(input("Second: "))
+
+    now = datetime.datetime.now()
+    hour_now = now.hour
+    minute_now = now.minute
+    second_now = now.second
+
+    Sum_now = hour_now*3600+minute_now*60+second_now
+    Sum = Hour*3600+Minute*60+Second
+
+    Sum_Predict = Sum_now + Sum
+
+    Hour_Predict = int(Sum_Predict / 3600)
+    RestHour_Predict = Sum_Predict % 3600
+    Minute_Predict = int(RestHour_Predict / 60)
+    Second_Predict = RestHour_Predict % 60
+
+    print("{}{}{}{}{}".format(Hour_Predict, ":", Minute_Predict, ":", Second_Predict))
+
+    for i in range(Sum):
+        TrueHour = int((Sum-i)/3600)
+        RestHour = (Sum-i)%3600
+        TrueMinute = int(RestHour/60)
+        TrueSecond = RestHour%60
+        print("{}{}{}{}{}".format(TrueHour,":",TrueMinute,":",TrueSecond))
+        time.sleep(1)
+
+    print("dididididididi")
+
+
+def stopWatch():
+    botton = input("write run to start: ")
+    print("press any key to exit")
+    second = 0
+    minute = 0
+    hour = 0
+    if botton == "run":
+        threading.Thread(target=consoleInput, args=(consoleBuffer,), daemon=True).start()  # start the thread
+        while not len(consoleBuffer):
+            second += 1
+            if second == 60:
+                minute += 1
+                second = 0
+            if minute == 60:
+                hour += 1
+                minute = 0
+            print("{}{}{}{}{}".format(hour,":",minute,":",second))
+            time.sleep(1)
+    else:
+        print("error")
+
+
+while running:
+    print("Choose the mod you want")
+    print("1- Timer    2- StopWatch    3- Exit")
+    modo = int(input())
+    if modo == 1:
+        timer()
+    elif modo == 2:
+        stopWatch()
+    elif modo == 3:
+        running = False
+    else:
+        print("error, cant recognize the input")
